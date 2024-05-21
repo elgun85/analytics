@@ -1,9 +1,6 @@
-
-
-
-
-
-
+@extends('Page.layout.master')
+@section('title','Blank')
+@section('content')
 <main id="main" class="main">
 
     <div class="pagetitle">
@@ -15,7 +12,8 @@
                 <li class="breadcrumb-item active">Blank</li>
             </ol>
         </nav>
-    </div><!-- End Page Title -->
+    </div>
+    <!-- End Page Title -->
 
     <section class="section">
         <div class="row">
@@ -44,5 +42,5 @@
     </section>
 
 </main><!-- End #main -->
-
+@endsection
 

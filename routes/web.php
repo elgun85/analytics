@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeControlller;
 //Route::view('/', 'welcome');
 
 Route::get('/',[HomeControlller::class,'login']);
+Route::get('/Register',[HomeControlller::class,'register'])->name('registers');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
