@@ -44,7 +44,7 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="col-12">
             <label for="password" class="form-label">Password</label>
             <input type="password" wire:model="form.password"  name="password" class="form-control" id="password" required autocomplete="current-password">
-            <div class="invalid-feedback">Please enter your password!</div>
+            <span>@error('form.password') <p class="text-danger">{{$message}} @enderror</span>
         </div>
 
         <div class="col-12">
