@@ -12,6 +12,29 @@ Route::post('/logout',[LoginController::class,'logout'])->name('logout');
 Route::get('/Profile',[LoginController::class,'profile'])->name('profiles');
 
 
+
+
+
+
+
+/*Admin*/
+Route::group(['middleware' => ['auth','isAdmin']],function ()
+{
+    Route::get('/dashboard', [HomeControlller::class, 'dashboard'])->name('dashboard');
+    Route::get('/telnet', [HomeControlller::class, 'telnet'])->name('telnet');
+
+});
+
+
+
+
+
+
+
+
+
+
+
 /*Route::get('/blank',[HomeControlller::class,'blank'])->name('blank');*/
 
 
@@ -24,14 +47,5 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');*/
 
-
-
-
-/*Admin*/
-Route::group(['middleware' => ['auth','isAdmin']],function ()
-{
-    Route::get('/dashboard', [HomeControlller::class, 'dashboard'])->name('dashboard');
-
-});
 
 require __DIR__.'/auth.php';
