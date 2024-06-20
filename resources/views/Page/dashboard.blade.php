@@ -355,7 +355,8 @@
                                 </div>
 
                             </div>
-                        </div><!-- End Top Selling -->
+                        </div>
+                        <!-- End Top Selling -->
 
                     </div>
                 </div><!-- End Left side columns -->
