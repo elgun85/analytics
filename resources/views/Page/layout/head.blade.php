@@ -32,6 +32,8 @@
 
 
     @yield('css_select')
+    @yield('data_table_ccs')
+
 
 </head>
 
