@@ -1,66 +1,23 @@
 @extends('Page.layout.master')
 @section('title','Hesablanmış məbləğ')
 @section('content')
-    <main id="main" class="main">
-        <div class="pagetitle">
-            <h1>@yield('title')</h1>
-        </div>
+<main id="main" class="main">
 
-        <section class="section">
-            <div class="row">
-                <div class="card">
-                    <div class="card-body">
-                        <form  action="{{route('hm')}}" method="get" name="formdan">
-                            @csrf
-                            <div class="row mb-3">
-                                <div class="col-sm-2">
-                                    <select id="abon1" class="form-control" name="ay"
-                                            aria-label="Default select example">
-                                        <option value="" selected>Ay seçin  </option>
-                                        @if(request()->get('ay') !=0)
-                                            <option  @if(request()->get('ay')) selected @endif   value="{{request()->get('ay')}}">{{request()->get('ay')}}</option>
-                                        @endif
-                                        @foreach($aylar as $ay)
-                                            @if(request()->get('ay')!=$ay->ay)
-                                                <option    value="{{$ay->ay}}">{{$ay->ay}}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
+    <div class="pagetitle">
+        <h1>@yield('title')</h1>
+    </div>
+    <!-- End Page Title -->
 
-                                <div class="col-sm-2">
-                                    <select id="abon1" class="form-control" name="il"
-                                            aria-label="Default select example">
-                                        <option value="" selected>İl seçin  </option>
-                                        @if(request()->get('ay') !=0)
-                                            <option  @if(request()->get('il')) selected @endif   value="{{request()->get('il')}}">{{request()->get('il')}}</option>
-                                        @endif
-                                        @foreach($iller as $il)
-                                            @if(request()->get('il')!=$il->il)
-                                                <option    value="{{$il->il}}">{{$il->il}}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary mb-3">Göndər</button>
-                                </div>
-
-                            </div>
-                        </form>
-                    </div>
-
-
-
+    <section class="section">
+        <div class="row">
+            <div class="card">
                 <div class="card-body">
                     {{--                cedvel evvel --}}
                     <table id="example1" class="table table-bordered table-striped ">
                         <thead class="text-center text-bold">
                         <tr>
-                            <td class="text-left">Telefon</td>
-                            <td>Kateqoriya</td>
-                            <td>Məbləğ</td>
+                            <td class="text-left">Provayder adı</td>
+                            <td>İstafəçi sayı</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -69,14 +26,18 @@
                         $dey = ['Ə', 'Ə', 'ə', 'Ö', 'ö', 'I', 'ı', 'Ü', 'ü', 'Ş', 'ş', 'Ğ', 'ğ', 'Ç', 'ç'];
                         {{-- {{str_replace( $bul,$dey,$item->ADQURUM)}}--}}
                         ?>
-                        @foreach($data as $ItemHM)
-                            <tr class="text-center">
-                                <td>{{$ItemHM->notel}}</td>
-                                <td>{{$ItemHM->ABONENT}}</td>
-                                <td>{{$ItemHM->cemi_hesablama}}</td>
-
+{{--                        @foreach($data as $ItemDP)
+                            <tr>
+                                <td>
+                                    @if($ItemDP->cem == 'cemi')
+                                        Cəmi
+                                    @else
+                                        {{substr(str_replace( $bul,$dey,$ItemDP->ADQURUM),0,50)}}
+                                    @endif
+                                </td>
+                                <td>{{$ItemDP->say}}</td>
                             </tr>
-                        @endforeach
+                        @endforeach--}}
                         </tbody>
                         <tfoot>
                         </tfoot>

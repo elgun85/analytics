@@ -83,10 +83,10 @@ class AnalyseController extends Controller
                 DB::raw
                 ('count(*) as say,
                                  COALESCE(elave.kodqurum, "cemi") as cem,
-                                 MAX(elave.notel) as notel,
-                                 MAX(elave.KODTARIF) as KODTARIF,
+                                 elave.notel as notel,
+                                 elave.KODTARIF as KODTARIF,
                                  elave.kodqurum,
-                                 MAX(qurum.ADQURUM) as ADQURUM'
+                                 qurum.ADQURUM as ADQURUM'
                 )
             )
             ->where('elave.KODTARIF', 543)
@@ -97,10 +97,129 @@ class AnalyseController extends Controller
         return view('Analyse.dp', compact('data'));
     }
 
-    public function hm()
+    public function hm(Request $request)
     {
-        return view('Analyse.hm');
+        $il = $request->il;
+        $ay = $request->ay;
+
+        $aylar = DB::table('e_flkarts as esas')
+            ->select('ay', DB::raw('count(*) as total'))
+            ->groupBy('ay')
+            ->get();
+
+        $iller = DB::table('e_flkarts as esas')
+            ->select('il', DB::raw('count(*) as total'))
+            ->groupBy('il')
+            ->get();
+
+        if ($ay || $il) {
+            $E = DB::table('e_flkartxes as elave')
+                ->join('e_flkarts as esas', 'elave.notel', '=', 'esas.notel')
+                ->leftJoin('e_lsqurums as qurum', 'elave.KODQURUM', '=', 'qurum.KODQURUM')
+                ->leftJoin('e_lstarifs as tarif', 'elave.KODTARIF', '=', 'tarif.KODTARIF')
+                ->select(
+                    'esas.notel',
+                    'esas.ABONENT',
+                    'elave.KODQURUM',
+                    'elave.SUMMA as SUMMA',
+                    'qurum.KODMHM',
+                    'tarif.KODISH'
+                );
+
+            $E1 = DB::table(DB::raw("({$E->toSql()}) as E1"));
+
+            $B = DB::table('e_flkarts as esas')
+                ->leftJoin('e_lsqurums as qurum', 'esas.KODQURUM', '=', 'qurum.KODQURUM')
+                ->leftJoin('e_lstarifs as tarif', 'esas.kodtarif', '=', 'tarif.kodtarif')
+                ->select(
+                    'notel',
+                    'ABONENT',
+                    'esas.KODQURUM',
+                    'esas.SUMMA0 as SUMMA',
+                    'KODMHM',
+                    'KODISH'
+                )
+                ->unionAll($E1);
+
+            $data = DB::table(DB::raw("({$B->toSql()}) as T1"))
+                ->select('T1.*',
+                    DB::raw('SUM(SUMMA) as cemi_hesablama'))
+                ->whereIn('ABONENT', [1, 2])
+                ->whereNotIn('KODISH', [0, 5, 6, 8])
+                ->whereNotIn('SUMMA', [0])
+                ->groupBy('notel')
+                ->get();
+
+
+
+            return view('Analyse.hm', compact('data', 'aylar', 'iller'));
+        }
+
+        return view('Analyse.hm', compact('aylar', 'iller'));
     }
+
+
+    /*  public function hm(Request $request)
+      {
+          $il = $request->il;
+          $ay = $request->ay;
+
+          $aylar=DB::table('e_flkarts as esas')
+              -> select('ay', DB::raw('count(*) as total'))
+              ->groupBy('ay')
+              ->get();
+
+          $iller=DB::table('e_flkarts as esas')
+              -> select('il', DB::raw('count(*) as total'))
+              ->groupBy('il')
+              ->get();
+
+          if ($ay or $il)
+          {
+              $E=DB::table('e_flkartxes as elave')
+                  ->join('e_flkarts  as esas','elave.notel', '=', 'esas.notel')
+                  ->leftJoin('e_lsqurums as qurum','elave.KODQURUM', '=', 'qurum.KODQURUM')
+                  ->leftJoin('e_lstarifs as tarif','elave.KODTARIF', '=', 'tarif.KODTARIF')
+                  ->select(
+
+                      'esas.notel',
+                      'esas.ABONENT',
+                      'elave.KODQURUM',
+                      'elave.SUMMA as SUMMA',
+                      'qurum.KODMHM',
+                      'tarif.KODISH'
+                  )
+              ;
+              $E1=DB::table(DB::raw("({$E->toSql()}) as E1"));
+
+              $B=DB::table('e_flkarts  as esas')
+                  ->leftJoin('e_lsqurums as qurum','esas.KODQURUM','=','qurum.KODQURUM')
+                  ->leftJoin('e_lstarifs as tarif','esas.kodtarif','=','tarif.kodtarif')
+                  ->select(
+                      'notel',
+                      'ABONENT',
+                      'esas.KODQURUM',
+                      'esas.SUMMA0 as SUMMA',
+                      'KODMHM',
+                      'KODISH'
+                  )
+                  ->unionAll($E1);
+              $T1=DB::table(DB::raw("({$B->toSql()}) as T1"));
+
+              $T1=$T1->select('T1.*',$T1->raw('SUM(SUMMA) as cemi_hesablama'));
+              $data=$T1
+
+                  ->whereIn('ABONENT',array(1,2))
+                  ->whereNotIn('KODISH',array(0,5,6,8))
+                  ->whereNotIn('SUMMA',[0])
+                  ->groupBy('notel')
+                  ->get();
+
+              return view('Analyse.hm',compact('data','aylar','iller'));
+          }else{
+              return view('Analyse.hm',compact('aylar','iller'));
+          }
+      }*/
 
     public function ml()
     {

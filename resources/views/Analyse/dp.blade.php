@@ -15,6 +15,7 @@
                                 <thead class="text-center text-bold">
                                 <tr>
                                     <td class="text-left">Provayder adı</td>
+                                    <td >Şəxsi hesab</td>
                                     <td>İstafəçi sayı</td>
                                 </tr>
                                 </thead>
@@ -25,14 +26,15 @@
                                 {{-- {{str_replace( $bul,$dey,$item->ADQURUM)}}--}}
                                 ?>
                                 @foreach($data as $ItemDP)
-                                    <tr>
+                                    <tr class="text-center">
                                         <td>
                                             @if($ItemDP->cem == 'cemi')
                                                 Cəmi
                                             @else
-                                                {{substr(str_replace( $bul,$dey,$ItemDP->ADQURUM),0,50)}}
+                                                {{substr(str_replace( $bul,$dey,$ItemDP->ADQURUM),0,15)}}
                                             @endif
                                         </td>
+                                        <td>{{$ItemDP->kodqurum}}</td>
                                         <td>{{$ItemDP->say}}</td>
                                     </tr>
                                 @endforeach

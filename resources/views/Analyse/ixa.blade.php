@@ -161,10 +161,9 @@
                 <tr >
                     <td class="text-left" >#</td>
                     <td class="text-left" >Telefon</td>
-                    <td>Əsas Xid</td>
-                    <td>Abon</td>
-
-                    <td>Əlavə xid</td>
+                    <td>Kateqoriya</td>
+                    <td>Əsas xidmət</td>
+                    <td>Əlavə xidmət</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -177,10 +176,6 @@
                     <tr class="text-center">
                         <td>{{$loop->iteration}}</td>
                         <td>{{$item->notel}}</td>
-                        <td>{{$item->main_tariff}} ( {{$item->main_adtarif}})
-
-                            {{--  {{substr(str_replace( $bul,$dey,$item->adtarif),0,40)}}--}}
-                        </td>
                         <td>
                             @if($item->ABONENT == 1 and $item->ABONENT2 == 0)
                                 Mənzil
@@ -194,6 +189,7 @@
 
                             @endif
                         </td>
+                        <td>{{$item->main_tariff}} ( {{$item->main_adtarif}})</td>
                         <td>{{$item->extra_tariff}}
                             {{substr(str_replace( $bul,$dey,$item->extra_adtarif),0,40)}}
                         </td>
