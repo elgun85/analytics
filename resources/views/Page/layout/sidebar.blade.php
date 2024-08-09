@@ -21,7 +21,7 @@
             </a>
         </li>
 
-     {{--   <li class="nav-item">
+{{--        <li class="nav-item">
             <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-layout-text-window-reverse"></i><span>Maliyyə</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
@@ -43,11 +43,47 @@
 
 
         <li class="nav-item">
+            <a class="nav-link {{ in_array(request()->path(), ['dmc', 'dmfh', 'dmn', 's', 'edv']) ? '' : 'collapsed' }}"
+               data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-pie-chart-fill"></i><span>Maliyyə</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="finance-nav" class="nav-content collapse {{ in_array(request()->path(), ['dmc', 'dmfh', 'dmn', 'edvs', 'edv']) ? 'show' : '' }} " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{route('dmc')}}" class="{{ request()->is('dmc') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Data Montly Cari</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('dmfh')}}" class="{{ request()->is('dmfh') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Data Montly (F+H)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('dmn')}}" class="{{ request()->is('dmn') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Data Montly Nazirlik</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('edvs')}}" class="{{ request()->is('edvs') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Ədv -siz sənədləşmə</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('edv')}}" class="{{ request()->is('edv') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Ədv-siz siyahı</span>
+                    </a>
+                </li>
+
+
+            </ul>
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link {{ in_array(request()->path(), ['ixa', 'dp', 'hm', 'ml', 'mld']) ? '' : 'collapsed' }}"
-               data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+               data-bs-target="#Analyse-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-pie-chart-fill"></i><span>Analiz</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="tables-nav" class="nav-content collapse {{ in_array(request()->path(), ['ixa', 'dp', 'hm', 'ml', 'mld']) ? 'show' : '' }} " data-bs-parent="#sidebar-nav">
+            <ul id="Analyse-nav" class="nav-content collapse {{ in_array(request()->path(), ['ixa', 'dp', 'hm', 'ml', 'mld']) ? 'show' : '' }} " data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="{{route('ixa')}}" class="{{ request()->is('ixa') ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>İnternet xidməti analizi</span>
@@ -81,6 +117,12 @@
 
 
 
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{route('dataTable')}}">
+                <i class="bi bi-table"></i>
+                <span>Data Table</span>
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-register.html">
                 <i class="bi bi-card-list"></i>

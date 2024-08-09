@@ -33,6 +33,8 @@
 
     @yield('css_select')
     @yield('data_table_ccs')
+    @yield('data_table_excell_ccs')
+
 
 
 </head>

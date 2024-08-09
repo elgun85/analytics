@@ -44,6 +44,11 @@ class HomeControlller extends Controller
         return  view('page.telnet',compact('statistics'));
     }
 
+    public function dataTable()
+    {
+        return view('Page.dataTable');
+    }
+
 
 
 }

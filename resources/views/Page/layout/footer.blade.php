@@ -18,6 +18,7 @@
 @yield('select_js')
 @yield('script')
 @yield('data_table_js')
+@yield('data_table_excell_js')
 @yield('select_all')
 
 </body>

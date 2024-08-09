@@ -24,6 +24,7 @@ Route::group(['middleware' => ['auth','isAdmin']],function ()
 {
     Route::get('/dashboard', [HomeControlller::class, 'dashboard'])->name('dashboard');
     Route::get('/telnet', [HomeControlller::class, 'telnet'])->name('telnet');
+    Route::get('/dataTable', [HomeControlller::class, 'dataTable'])->name('dataTable');
 
                          /*Finance*/
 
@@ -35,6 +36,17 @@ Route::group(['middleware' => ['auth','isAdmin']],function ()
     Route::get('/hm', [AnalyseController::class, 'hm'])->name('hm');
     Route::get('/ml', [AnalyseController::class, 'ml'])->name('ml');
     Route::get('/mld', [AnalyseController::class, 'mld'])->name('mld');
+
+
+
+                        /*Finance*/
+    Route::get('/data_montly', [FinanceController::class, 'dmc'])->name('dmc');
+    Route::get('/data_montly(FH)', [FinanceController::class, 'dmfh'])->name('dmfh');
+    Route::get('/data_montly(Nazirlik)', [FinanceController::class, 'dmn'])->name('dmn');
+    Route::get('/edv_siz_senedlesme', [FinanceController::class, 'edvs'])->name('edvs');
+    Route::get('/edv_siz_siyahi', [FinanceController::class, 'edv'])->name('edv');
+
+
 
 });
 

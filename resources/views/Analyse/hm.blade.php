@@ -52,7 +52,7 @@
                     </div>
 
 
-
+@if(request()->get('ay') || request()->get('il') )
                 <div class="card-body">
                     {{--                cedvel evvel --}}
                     <table id="example1" class="table table-bordered table-striped ">
@@ -64,17 +64,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php
-                        $bul = ['Ў', '?', 'ў', 'Ё', 'ё', '·', '√', '№', '¤', 'Ї', 'ї', '°', '∙', 'Є', 'є'];
-                        $dey = ['Ə', 'Ə', 'ə', 'Ö', 'ö', 'I', 'ı', 'Ü', 'ü', 'Ş', 'ş', 'Ğ', 'ğ', 'Ç', 'ç'];
-                        {{-- {{str_replace( $bul,$dey,$item->ADQURUM)}}--}}
-                        ?>
                         @foreach($data as $ItemHM)
                             <tr class="text-center">
                                 <td>{{$ItemHM->notel}}</td>
                                 <td>{{$ItemHM->ABONENT}}</td>
                                 <td>{{$ItemHM->cemi_hesablama}}</td>
-
                             </tr>
                         @endforeach
                         </tbody>
@@ -83,6 +77,7 @@
                     </table>
                     {{--                cedvel son--}}
                 </div>
+                    @endif
             </div>
 
 
