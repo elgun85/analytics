@@ -1,5 +1,5 @@
 @extends('Page.layout.master')
-@section('title','Data Montly Cari')
+@section('title','Data Montly Nazirlik')
 @section('content')
     <main id="main" class="main">
         <div class="pagetitle">
@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="card">
                     <div class="card-body">
-                        <form  action="{{route('dmc')}}" method="get" name="formdan">
+                        <form  action="{{route('dmn')}}" method="get" name="formdan">
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-sm-2">
@@ -128,7 +128,7 @@
                                     {{--senedlesme--}}
                                     @if($resultsPay != Null)
                                         <tr>
-                                            <td></td>
+                                            <td> </td>
                                         </tr>
                                     @endif
 
