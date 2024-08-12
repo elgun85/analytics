@@ -29,70 +29,69 @@ class FinanceController extends Controller
             ->groupBy('year')
             ->get();
 
-        if ($month || $year)
-            {
-                // Əsas və əlavə cədvəllərin birləşdirilməsi
-                $otherData = DB::table('e_flkartxes as other')
-                    ->join('e_flkarts as main', function ($join) {
-                        $join->on('other.notel', '=', 'main.notel')
-                            ->on('other.ay', '=', 'main.ay')
-                            ->on('other.il', '=', 'main.il');
-                    })
-                    ->leftJoin('e_lsqurums as company', function ($join) {
+        if ($month || $year) {
+            // Əsas və əlavə cədvəllərin birləşdirilməsi
+            $otherData = DB::table('e_flkartxes as other')
+                ->join('e_flkarts as main', function ($join) {
+                    $join->on('other.notel', '=', 'main.notel')
+                        ->on('other.ay', '=', 'main.ay')
+                        ->on('other.il', '=', 'main.il');
+                })
+                ->leftJoin('e_lsqurums as company', function ($join) {
+                    $join->on('main.KODQURUM', '=', 'company.KODQURUM')
+                        ->on('main.ay', '=', 'company.ay')
+                        ->on('main.il', '=', 'company.il');
+                })
+                ->leftJoin('e_lstarifs as tarif', function ($join) {
+                    $join->on('other.KODTARIF', '=', 'tarif.KODTARIF')
+                        ->on('other.ay', '=', 'tarif.ay')
+                        ->on('other.il', '=', 'tarif.il');
+                })
+                ->select(
+                    'main.notel',
+                    'main.KODQURUM',
+                    'main.ABONENT',
+                    'other.KODTARIF',
+                    'other.SUMMA',
+                    'company.KATEQOR',
+                    'tarif.KODISH'
+                );
+
+            $otherDatas = DB::table(DB::raw("({$otherData->toSql()}) as E1"));
+            // return $E1->take(10)->get();
+
+            $mainData = DB::table('e_flkarts  as main')
+                ->leftJoin('e_lsqurums as company',
+                    function ($join) {
                         $join->on('main.KODQURUM', '=', 'company.KODQURUM')
                             ->on('main.ay', '=', 'company.ay')
                             ->on('main.il', '=', 'company.il');
                     })
-                    ->leftJoin('e_lstarifs as tarif', function ($join) {
-                        $join->on('other.KODTARIF', '=', 'tarif.KODTARIF')
-                            ->on('other.ay', '=', 'tarif.ay')
-                            ->on('other.il', '=', 'tarif.il');
-                    })
-                    ->select(
-                        'main.notel',
-                        'main.KODQURUM',
-                        'main.ABONENT',
-                        'other.KODTARIF',
-                        'other.SUMMA',
-                        'company.KATEQOR',
-                        'tarif.KODISH'
-                    );
-
-                $otherDatas = DB::table(DB::raw("({$otherData->toSql()}) as E1"));
-               // return $E1->take(10)->get();
-
-                $mainData = DB::table('e_flkarts  as main')
-                    ->leftJoin('e_lsqurums as company',
-                        function ($join) {
-                            $join->on('main.KODQURUM', '=', 'company.KODQURUM')
-                                ->on('main.ay', '=', 'company.ay')
-                                ->on('main.il', '=', 'company.il');
-                        })
-                    ->leftJoin('e_lstarifs as tarif',
-                        function ($join) {
-                            $join->on('main.kodtarif', '=', 'tarif.kodtarif')
-                                ->on('main.ay', '=', 'tarif.ay')
-                                ->on('main.ay', '=', 'tarif.ay');
-                        }
-                    )
-                    ->select(
-                        'notel',
-                        'main.KODQURUM',
-                        'ABONENT',
-                        'main.KODTARIF',
-                        'main.SUMMA0 as SUMMA',
-                        'KATEQOR',
-                        'KODISH'
-                    )
-                    ->unionAll($otherDatas);
-                $dataJoin = DB::table(DB::raw("({$mainData->toSql()}) as T1"));
+                ->leftJoin('e_lstarifs as tarif',
+                    function ($join) {
+                        $join->on('main.kodtarif', '=', 'tarif.kodtarif')
+                            ->on('main.ay', '=', 'tarif.ay')
+                            ->on('main.ay', '=', 'tarif.ay');
+                    }
+                )
+                ->select(
+                    'notel',
+                    'main.KODQURUM',
+                    'ABONENT',
+                    'main.KODTARIF',
+                    'main.SUMMA0 as SUMMA',
+                    'KATEQOR',
+                    'KODISH'
+                )
+                ->unionAll($otherDatas);
+            $dataJoin = DB::table(DB::raw("({$mainData->toSql()}) as T1"));
             //return    $dataJoin->take(10)->get();
 
 
-                $dataCategory = $dataJoin
-                    ->select('T1.*',
-                        $dataJoin->raw(
-                            '
+            $dataCategory = $dataJoin
+                ->select('T1.*',
+                    $dataJoin->raw(
+                        '
                         CASE
     		WHEN T1.abonent IN (1, 8) THEN "MENZIL"
     		ELSE "IDERE"
@@ -123,16 +122,16 @@ class FinanceController extends Controller
     		ELSE          "basqa"
    		END AS "xidmetin_novu"
                 '
-                        )
-                    );
-                $dataCategories = DB::table(DB::raw("({$dataCategory->toSql()}) as T2"));
+                    )
+                );
+            $dataCategories = DB::table(DB::raw("({$dataCategory->toSql()}) as T2"));
 
-                //return$dataCategories->take(10)->get();
+            //return$dataCategories->take(10)->get();
 
-                $dataService = $dataCategories->select('T2.*',
-                    DB::raw('COALESCE( T2.xidmetin_novu," ") as xidmetin_novu'),
-                    $dataCategories->raw(
-                        '
+            $dataService = $dataCategories->select('T2.*',
+                DB::raw('COALESCE( T2.xidmetin_novu," ") as xidmetin_novu'),
+                $dataCategories->raw(
+                    '
             CASE
    		WHEN T2.xidmetin_novu = "1.1 GPON"
    		  or T2.xidmetin_novu = "1.2 Mis"
@@ -174,29 +173,29 @@ class FinanceController extends Controller
     COUNT(*) as cemi_say,
     SUM(T2.summa) as cemi_hesab
                 '
-                    ));
+                ));
 
-                $resultsPhone = $dataService
-                    ->whereIn('abonent', array(1, 2))
-                    ->whereNotIn('KODISH', [0, 5, 6, 8])
-                    ->groupBy('Başlıq')
-                    ->groupBy(DB::raw('xidmetin_novu WITH ROLLUP'))
-                    ->get();
+            $resultsPhone = $dataService
+                ->whereIn('abonent', array(1, 2))
+                ->whereNotIn('KODISH', [0, 5, 6, 8])
+                ->groupBy('Başlıq')
+                ->groupBy(DB::raw('xidmetin_novu WITH ROLLUP'))
+                ->get();
 
 
-                //SEnedlesme
+            //SEnedlesme
 
-                $dataPay = DB::table('e_banks as pay')
-                    ->leftJoin('e_lsqurums as Ls',
-                        function ($join) {
-                            $join->on('pay.kodqurum', '=', 'Ls.kodqurum')
-                                ->on('pay.ay', '=', 'Ls.ay')
-                                ->on('pay.il', '=', 'Ls.il');
-                        })
-                    ->select('pay.notel', 'pay.kodqurum', 'pay.kodxidmet', 'pay.summa', 'Ls.kateqor', 'Ls.kodmhm', 'pay.ay', 'pay.il');
-                $dataPay1 = DB::table(DB::raw("({$dataPay->toSql()}) as Ts1"));
-                $dataPay1 = $dataPay1->select('Ts1.*',
-                    $dataPay1->raw('
+            $dataPay = DB::table('e_banks as pay')
+                ->leftJoin('e_lsqurums as Ls',
+                    function ($join) {
+                        $join->on('pay.kodqurum', '=', 'Ls.kodqurum')
+                            ->on('pay.ay', '=', 'Ls.ay')
+                            ->on('pay.il', '=', 'Ls.il');
+                    })
+                ->select('pay.notel', 'pay.kodqurum', 'pay.kodxidmet', 'pay.summa', 'Ls.kateqor', 'Ls.kodmhm', 'pay.ay', 'pay.il');
+            $dataPay1 = DB::table(DB::raw("({$dataPay->toSql()}) as Ts1"));
+            $dataPay1 = $dataPay1->select('Ts1.*',
+                $dataPay1->raw('
                 CASE
              		WHEN Ts1.kodqurum = 0 THEN "MENZIL"
              		ELSE "IDERE"
@@ -214,12 +213,12 @@ class FinanceController extends Controller
             		ELSE "Digər"
    	        	END AS "xidmetin_novu"
    	        	'));
-                $dataPay2 = DB::table(DB::raw("({$dataPay1->toSql()}) as Ts2"));
+            $dataPay2 = DB::table(DB::raw("({$dataPay1->toSql()}) as Ts2"));
 
-                $payment = $dataPay2
-                    ->select('Ts2.xidmetin_novu',
-                        DB::raw('COALESCE( Ts2.xidmetin_novu,"Cəmi") as xidmetin_novu'),
-                        $dataPay2->raw('
+            $payment = $dataPay2
+                ->select('Ts2.xidmetin_novu',
+                    DB::raw('COALESCE( Ts2.xidmetin_novu,"Cəmi") as xidmetin_novu'),
+                    $dataPay2->raw('
 
                       SUM( CASE WHEN Ts2.categoriya = "MENZIL" THEN 1 ELSE 0 END ) as menzil_say,
                       SUM( CASE WHEN Ts2.categoriya = "MENZIL" THEN Ts2.summa ELSE 0 END) as menzil_summa,
@@ -231,24 +230,24 @@ class FinanceController extends Controller
                       COUNT(*) as cemi_say,
                       SUM(Ts2.summa) as cemi_hesab
                        '));
-                $resultsPay = $payment
-                    ->where('ay', $month)
-                    ->where('il', $year)
-                    ->where('xidmetin_novu', '!=', 'Digər')
-                    ->groupBy(DB::raw('Ts2.xidmetin_novu WITH ROLLUP'))
-                    ->take(150)
-                    ->get();
+            $resultsPay = $payment
+                ->where('ay', $month)
+                ->where('il', $year)
+                ->where('xidmetin_novu', '!=', 'Digər')
+                ->groupBy(DB::raw('Ts2.xidmetin_novu WITH ROLLUP'))
+                ->take(150)
+                ->get();
 
 
-                return view('Finance.dmc', compact('resultsPhone', 'resultsPay', 'months', 'years'));
+            return view('Finance.dmc', compact('resultsPhone', 'resultsPay', 'months', 'years'));
 
-            }
-        else{
-            return view('Finance.dmc',compact('months','years'));
+        } else {
+            return view('Finance.dmc', compact('months', 'years'));
         }
 
     }
-        public function dmfh(Request $request)
+
+    public function dmfh(Request $request)
     {
         ini_set('max_execution_time', 900);
 
@@ -267,8 +266,7 @@ class FinanceController extends Controller
             ->select('il as year', DB::raw('count(*) as total'))
             ->groupBy('year')
             ->get();
-        if ($month || $year)
-        {
+        if ($month || $year) {
             // Əsas və əlavə cədvəllərin birləşdirilməsi
             $otherData = DB::table('e_flkartxes as other')
                 ->join('e_flkarts as main', function ($join) {
@@ -419,7 +417,6 @@ class FinanceController extends Controller
                 ->whereNotIn('KODISH', [0, 5, 6, 8])
                 ->groupBy(['Başlıq', DB::raw('xidmetin_novu WITH ROLLUP')])
                 ->get();
-
 
 
             //SEnedlesme
@@ -478,9 +475,8 @@ class FinanceController extends Controller
 
             return view('Finance.dmfh', compact('resultsPhone', 'resultsPay', 'months', 'years'));
 
-        }
-        else{
-            return view('Finance.dmfh',compact('months','years'));
+        } else {
+            return view('Finance.dmfh', compact('months', 'years'));
         }
     }
 
@@ -505,8 +501,7 @@ class FinanceController extends Controller
             ->groupBy('year')
             ->get();
 
-        if ($month || $year)
-        {
+        if ($month || $year) {
             // Əsas və əlavə cədvəllərin birləşdirilməsi
             $otherData = DB::table('e_flkartxes as other')
                 ->join('e_flkarts as main', function ($join) {
@@ -655,7 +650,7 @@ class FinanceController extends Controller
             $resultsPhone = $dataService
                 ->whereIn('abonent', [1, 2])
                 ->whereNotIn('KODISH', [0, 5, 6, 8])
-                ->whereIn('KODQURUM',array(98088,98013,3956,98083,98039,98139,98014))
+                ->whereIn('KODQURUM', array(98088, 98013, 3956, 98083, 98039, 98139, 98014))
                 ->groupBy(['Başlıq', DB::raw('xidmetin_novu WITH ROLLUP')])
                 ->get();
 
@@ -707,7 +702,7 @@ class FinanceController extends Controller
             $resultsPay = $payment
                 ->where('ay', $month)
                 ->where('il', $year)
-                ->whereIn('KODQURUM',array(98088,98013,3956,98083,98039,98139,98014))
+                ->whereIn('KODQURUM', array(98088, 98013, 3956, 98083, 98039, 98139, 98014))
                 ->where('xidmetin_novu', '!=', 'Digər')
                 ->groupBy(DB::raw('Ts2.xidmetin_novu WITH ROLLUP'))
                 ->get();
@@ -715,18 +710,76 @@ class FinanceController extends Controller
 
             return view('Finance.dmn', compact('resultsPhone', 'resultsPay', 'months', 'years'));
 
-        }
-        else{
-            return view('Finance.dmn',compact('months','years'));
+        } else {
+            return view('Finance.dmn', compact('months', 'years'));
         }
 
     }
-        public function edvs()
+
+    public function edvs(Request $request)
     {
-        return 'dmc';
-        return view('Finance.edvs');
+        ini_set('max_execution_time', 900);
+
+        // Sorğu parametrlərini əldə edir
+        $year = $request->year;
+        $month = $request->month;
+
+        // Ayları qruplaşdır və sayını al
+        $months = DB::table('e_flkarts as main')
+            ->select('ay as month', DB::raw('count(*) as total'))
+            ->groupBy('month')
+            ->get();
+
+        // İlləri qruplaşdır və sayını al
+        $years = DB::table('e_flkarts as main')
+            ->select('il as year', DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->get();
+        if ($month || $year) {
+            $dataPay = DB::table('e_banks as pay')
+                ->leftJoin('e_lsqurums as Ls',
+                    function ($join) {
+                        $join->on('pay.kodqurum', '=', 'Ls.kodqurum')
+                            ->on('pay.ay', '=', 'Ls.ay')
+                            ->on('pay.il', '=', 'Ls.il');
+                    })
+               ->leftJoin('e_lsxidmets as lx',
+                    'pay.kodxidmet', '=', 'lx.kodxidmet'
+                )
+                ->select('pay.notel',
+                    'pay.kodqurum',
+                    'pay.kodxidmet',
+                    'pay.summa',
+                    'pay.ay',
+                    'pay.il',
+                    'Ls.adqurum',
+                    'Ls.kateqor',
+                    'Ls.kodmhm',
+                    'lx.KODISH'
+                )
+            ;
+            $dataPay1 = DB::table(DB::raw("({$dataPay->toSql()}) as Ts1"));
+
+      // return   $dataPay1->take(10)->get();
+
+
+
+           $resultsPay = $dataPay1
+                ->where('ay', $month)
+                ->where('il', $year)
+                ->whereNotIn('kodxidmet', [99, 507])
+                ->where('KODISH', 0)
+                ->whereIn('kateqor', [21, 31, 71, 23, 33, 73])
+                ->get();
+            $sum = $resultsPay->sum('summa');
+            return view('Finance.edvs', compact('months', 'years', 'sum', 'resultsPay'));
+        } else {
+            return view('Finance.edvs', compact('months', 'years'));
+        }
+
     }
-        public function edv()
+
+    public function edv()
     {
         return 'dmc';
         return view('Finance.edv');

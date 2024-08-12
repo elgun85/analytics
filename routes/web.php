@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth','isAdmin']],function ()
     Route::get('/dashboard', [HomeControlller::class, 'dashboard'])->name('dashboard');
     Route::get('/telnet', [HomeControlller::class, 'telnet'])->name('telnet');
     Route::get('/dataTable', [HomeControlller::class, 'dataTable'])->name('dataTable');
+    Route::get('/dataTable2', [HomeControlller::class, 'dataTable2'])->name('dataTable2');
 
                          /*Finance*/
 

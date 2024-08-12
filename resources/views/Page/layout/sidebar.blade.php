@@ -120,7 +120,12 @@
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{route('dataTable')}}">
                 <i class="bi bi-table"></i>
-                <span>Data Table</span>
+                <span>Data Table (Excell)</span>
+            </a>
+        </li>        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{route('dataTable2')}}">
+                <i class="bi bi-table"></i>
+                <span>Data Table(Excell,Pdf,Print)</span>
             </a>
         </li>
         <li class="nav-item">

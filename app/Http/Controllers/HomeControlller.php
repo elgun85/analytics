@@ -48,6 +48,24 @@ class HomeControlller extends Controller
     {
         return view('Page.dataTable');
     }
+    public function dataTable2(Request $request)
+    {
+        $year = $request->year;
+        $month = $request->month;
+
+        // Ayları qruplaşdır və sayını al
+        $months = DB::table('e_flkarts as main')
+            ->select('ay as month', DB::raw('count(*) as total'))
+            ->groupBy('month')
+            ->get();
+
+        // İlləri qruplaşdır və sayını al
+        $years = DB::table('e_flkarts as main')
+            ->select('il as year', DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->get();
+        return view('Page.dataTable2',compact('months','years'));
+    }
 
 
 
