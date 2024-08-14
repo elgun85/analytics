@@ -779,10 +779,120 @@ class FinanceController extends Controller
 
     }
 
-    public function edv()
+    public function edv(Request $request)
     {
-        return 'dmc';
-        return view('Finance.edv');
+        ini_set('max_execution_time', 900);
+
+        // Sorğu parametrlərini əldə edir
+        $year = $request->year;
+        $month = $request->month;
+
+        // Ayları qruplaşdır və sayını al
+        $months = DB::table('e_flkarts as main')
+            ->select('ay as month', DB::raw('count(*) as total'))
+            ->groupBy('month')
+            ->get();
+
+        // İlləri qruplaşdır və sayını al
+        $years = DB::table('e_flkarts as main')
+            ->select('il as year', DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->get();
+        if ($month || $year) {
+            $E=DB::table('e_flkartxes as other')
+                ->join('e_flkarts  as main',
+                    function ($join) {
+                        $join->on('other.notel', '=', 'main.notel')
+                            ->on('other.ay', '=', 'main.ay')
+                            ->on('other.il', '=', 'main.il');
+                    })
+                ->leftJoin('e_lsqurums as company',
+                    function ($join)
+                    {
+                        $join->on('main.kodqurum', '=', 'company.kodqurum');
+                    }    )
+                ->leftJoin('e_lstarifs as tarif',
+                    function ($join){
+                        $join->on('other.KODTARIF', '=', 'tarif.kodtarif');
+                    }
+                )
+                ->select
+                (
+                    'main.kodqurum',
+                    'main.abonent',
+                    'main.abonent2',
+                    'other.KODTARIF',
+                    'other.summa',
+                    'company.ADQURUM',
+                    'company.kateqor',
+                    'company.kodmhm',
+                    'tarif.KODISH',
+                    'other.ay',
+                    'other.il'
+
+                );
+
+            $E1 = DB::table(DB::raw("({$E->toSql()}) as E1"));
+
+            //  return $E1->where('kodqurum',6702)->take(150)->get();
+
+
+            $T = DB::table('e_flkarts as main')
+                ->leftJoin('e_lsqurums as company',
+                    function ($join)
+                    {
+                        $join->on('main.kodqurum', '=', 'company.kodqurum');
+                    })
+                ->leftJoin('e_lstarifs as tarif',
+                    function ($join){
+                        $join->on('main.KODTARIF', '=', 'tarif.kodtarif');
+                    }
+                )
+                ->select('main.kodqurum',
+                    'abonent',
+                    'abonent2',
+                    'main.KODTARIF',
+                    'main.SUMMA0 as summa',
+                    'ADQURUM',
+                    'kateqor',
+                    'kodmhm',
+                    'KODISH',
+                    'main.ay',
+                    'main.il'
+
+                )
+                ->unionAll($E1);
+
+            $T1=DB::table(DB::raw("({$T->toSql()}) as T1"));
+
+            $T1=$T1->select('ADQURUM',
+                'kodqurum',
+                'kodmhm',
+                'kateqor',
+                'KODISH',
+                'ay',
+                'il',
+                $T1->raw('COUNT(*) as cemi_say,
+               SUM(T1.summa) as cemi_hesablama'
+                ));
+
+
+
+            $dataCompany=$T1
+                ->where('ay',$month)
+                ->where('il',$year)
+                ->where('T1.abonent',2)
+                ->whereIn('kateqor',array(21,23,31,33,71,73))
+                ->whereNotIn('KODISH',array(0,5,6,8))
+                ->whereNotIn('KODTARIF',array(543))
+                ->groupBy(DB::raw('kodqurum WITH ROLLUP'))
+                ->take(150)
+                ->get();
+
+            return view('Finance.edv', compact('months', 'years','dataCompany'));
+        } else {
+            return view('Finance.edv', compact('months', 'years'));
+        }
     }
 
 
