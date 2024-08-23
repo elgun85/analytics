@@ -21,6 +21,13 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('tarif') ? '' : 'collapsed' }}" href="{{route('tarif')}}">
+                <i class="bi   bi-slack"></i>
+                <span>Tariflər</span>
+            </a>
+        </li>
+
 {{--        <li class="nav-item">
             <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-layout-text-window-reverse"></i><span>Maliyyə</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -45,7 +52,7 @@
         <li class="nav-item">
             <a class="nav-link {{ in_array(request()->path(), ['dmc', 'dmfh', 'dmn', 's', 'edv']) ? '' : 'collapsed' }}"
                data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-pie-chart-fill"></i><span>Maliyyə</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-bar-chart-fill"></i><span>Maliyyə</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="finance-nav" class="nav-content collapse {{ in_array(request()->path(), ['dmc', 'dmfh', 'dmn', 'edvs', 'edv']) ? 'show' : '' }} " data-bs-parent="#sidebar-nav">
                 <li>

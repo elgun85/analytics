@@ -1,8 +1,20 @@
 
 <div class="github">
+
+    echo "# Laravel-11-rest-api" >> README.md
+    git init
+    git add README.md
+    git commit -m "first commit"
+    git branch -M main
+    git remote add origin https://github.com/elgun85/Laravel-11-rest-api.git
+    git push -u origin main
+
+
+
+
     git pull origin main
     git add .
-    git commit -m "Your commit message"
+    git commit -m "     "
     git push origin main
 
 
@@ -11,4 +23,39 @@
     Reformat Edin:
     Windows/Linux: Ctrl + Alt + L
     Mac: Cmd + Alt + L
+
+    Adım 2: Tab düyməsini basın. Bu, seçdiyiniz bütün sətirləri bir neçə boşluq sağa sürüşdürəcək.
+    Adım 3: Əgər seçilmiş sətirləri sola sürüşdürmək istəyirsinizsə, Shift + Tab düymələrini istifadə edin.
+
+</div>
+<div class="api">
+    1. php artisan install:api
+    2.modellere use Laravel\Sanctum\HasApiTokens;
+    php artisan make:resource ProductResource - yaratmaq ucun
+    php artisan make:model Post -mc --api       model,migration,controller(resourse) yaradir api ucun
+
+
+
+
+</div>
+<div class="http status kodlari">
+    1xx: İnformasiya Cavabları
+    100 Continue: Müştəriyə sorğusunu davam etdirməyi bildirir.
+    101 Switching Protocols: Serverin müştərinin protokol dəyişdirmə tələbini qəbul etdiyini göstərir.
+    2xx: Uğurlu Cavablar
+    200 OK: Sorğu müvəffəqiyyətlə tamamlandı.
+    201 Created: Sorğu nəticəsində yeni bir resurs yaradıldı.
+    204 No Content: Sorğu müvəffəqiyyətlə tamamlandı, amma geri qaytarılacaq heç bir məlumat yoxdur.
+    3xx: Yönləndirmə Cavabları
+    301 Moved Permanently: Resurs daimi olaraq başqa bir ünvana köçürüldü.
+    302 Found: Resurs müvəqqəti olaraq başqa bir ünvanda tapıldı.
+    4xx: Müştəri Xətaları
+    400 Bad Request: Müştəri tərəfindən göndərilən sorğu yanlış və ya yarımçıqdır.
+    401 Unauthorized: Sorğunun icrası üçün autentifikasiya tələb olunur.
+    403 Forbidden: Müştərinin sorğuya icazəsi yoxdur.
+    404 Not Found: Sorğunun istədiyi resurs tapılmadı.
+    5xx: Server Xətaları
+    500 Internal Server Error: Serverdə bir xəta baş verdi.
+    502 Bad Gateway: Server, başqa bir serverdən düzgün cavab ala bilmədi.
+    503 Service Unavailable: Server müvəqqəti olaraq xidmət göstərmir.
 </div>
