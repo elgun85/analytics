@@ -22,7 +22,7 @@ class AnalyseController extends Controller
         $internet = $request->internet;
 
         // Tarif məlumatlarını gətir
-        $tarifQuery = tarif::orderBy('kod', 'ASC');
+        $tarifQuery = tarif::orderBy('kod', 'ASC')->where('status',0);
         if ($category) {
             $tarifQuery->where('category', $category);
         }

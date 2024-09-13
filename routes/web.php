@@ -43,10 +43,11 @@ Route::group(['middleware' => ['auth','isAdmin']],function ()
 
                         /*Finance*/
     Route::get('/data_montly', [FinanceController::class, 'dmc'])->name('dmc');
-    Route::get('/data_montly(FH)', [FinanceController::class, 'dmfh'])->name('dmfh');
-    Route::get('/data_montly(Nazirlik)', [FinanceController::class, 'dmn'])->name('dmn');
+    Route::get('/data_montly_FH', [FinanceController::class, 'dmfh'])->name('dmfh');
+    Route::get('/data_montly_Nazirlik', [FinanceController::class, 'dmn'])->name('dmn');
     Route::get('/edv_siz_senedlesme', [FinanceController::class, 'edvs'])->name('edvs');
     Route::get('/edv_siz_siyahi', [FinanceController::class, 'edv'])->name('edv');
+    Route::get('/gelir', [FinanceController::class, 'gelir'])->name('gelir');
 
 
 

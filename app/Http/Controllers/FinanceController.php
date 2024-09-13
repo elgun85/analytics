@@ -743,7 +743,7 @@ class FinanceController extends Controller
                             ->on('pay.ay', '=', 'Ls.ay')
                             ->on('pay.il', '=', 'Ls.il');
                     })
-               ->leftJoin('e_lsxidmets as lx',
+                ->leftJoin('e_lsxidmets as lx',
                     'pay.kodxidmet', '=', 'lx.kodxidmet'
                 )
                 ->select('pay.notel',
@@ -756,15 +756,13 @@ class FinanceController extends Controller
                     'Ls.kateqor',
                     'Ls.kodmhm',
                     'lx.KODISH'
-                )
-            ;
+                );
             $dataPay1 = DB::table(DB::raw("({$dataPay->toSql()}) as Ts1"));
 
-      // return   $dataPay1->take(10)->get();
+            // return   $dataPay1->take(10)->get();
 
 
-
-           $resultsPay = $dataPay1
+            $resultsPay = $dataPay1
                 ->where('ay', $month)
                 ->where('il', $year)
                 ->whereNotIn('kodxidmet', [99, 507])
@@ -799,7 +797,7 @@ class FinanceController extends Controller
             ->groupBy('year')
             ->get();
         if ($month || $year) {
-            $E=DB::table('e_flkartxes as other')
+            $E = DB::table('e_flkartxes as other')
                 ->join('e_flkarts  as main',
                     function ($join) {
                         $join->on('other.notel', '=', 'main.notel')
@@ -807,12 +805,11 @@ class FinanceController extends Controller
                             ->on('other.il', '=', 'main.il');
                     })
                 ->leftJoin('e_lsqurums as company',
-                    function ($join)
-                    {
+                    function ($join) {
                         $join->on('main.kodqurum', '=', 'company.kodqurum');
-                    }    )
+                    })
                 ->leftJoin('e_lstarifs as tarif',
-                    function ($join){
+                    function ($join) {
                         $join->on('other.KODTARIF', '=', 'tarif.kodtarif');
                     }
                 )
@@ -839,12 +836,11 @@ class FinanceController extends Controller
 
             $T = DB::table('e_flkarts as main')
                 ->leftJoin('e_lsqurums as company',
-                    function ($join)
-                    {
+                    function ($join) {
                         $join->on('main.kodqurum', '=', 'company.kodqurum');
                     })
                 ->leftJoin('e_lstarifs as tarif',
-                    function ($join){
+                    function ($join) {
                         $join->on('main.KODTARIF', '=', 'tarif.kodtarif');
                     }
                 )
@@ -863,9 +859,9 @@ class FinanceController extends Controller
                 )
                 ->unionAll($E1);
 
-            $T1=DB::table(DB::raw("({$T->toSql()}) as T1"));
+            $T1 = DB::table(DB::raw("({$T->toSql()}) as T1"));
 
-            $T1=$T1->select('ADQURUM',
+            $T1 = $T1->select('ADQURUM',
                 'kodqurum',
                 'kodmhm',
                 'kateqor',
@@ -877,21 +873,154 @@ class FinanceController extends Controller
                 ));
 
 
-
-            $dataCompany=$T1
-                ->where('ay',$month)
-                ->where('il',$year)
-                ->where('T1.abonent',2)
-                ->whereIn('kateqor',array(21,23,31,33,71,73))
-                ->whereNotIn('KODISH',array(0,5,6,8))
-                ->whereNotIn('KODTARIF',array(543))
+            $dataCompany = $T1
+                ->where('ay', $month)
+                ->where('il', $year)
+                ->where('T1.abonent', 2)
+                ->whereIn('kateqor', array(21, 23, 31, 33, 71, 73))
+                ->whereNotIn('KODISH', array(0, 5, 6, 8))
+                ->whereNotIn('KODTARIF', array(543))
                 ->groupBy(DB::raw('kodqurum WITH ROLLUP'))
                 ->take(150)
                 ->get();
 
-            return view('Finance.edv', compact('months', 'years','dataCompany'));
+            return view('Finance.edv', compact('months', 'years', 'dataCompany'));
         } else {
             return view('Finance.edv', compact('months', 'years'));
+        }
+    }
+
+    public function gelir(Request $request)
+    {
+        ini_set('max_execution_time', 900);
+
+        // Sorğu parametrlərini əldə edir
+        $year = $request->year;
+        $month = $request->month;
+        // Ayları qruplaşdır və sayını al
+        $months = DB::table('e_flkarts as main')
+            ->select('ay as month', DB::raw('count(*) as total'))
+            ->groupBy('month')
+            ->get();
+
+        // İlləri qruplaşdır və sayını al
+        $years = DB::table('e_flkarts as main')
+            ->select('il as year', DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->get();
+
+        if ($month || $year) {
+
+            // Əsas və əlavə cədvəllərin birləşdirilməsi
+            $otherData = DB::table('e_flkartxes as other')
+                ->join('e_flkarts as main', function ($join) {
+                    $join->on('other.notel', '=', 'main.notel')
+                        ->on('other.ay', '=', 'main.ay')
+                        ->on('other.il', '=', 'main.il');
+                })
+                ->leftJoin('e_lsqurums as company', function ($join) {
+                    $join->on('main.KODQURUM', '=', 'company.KODQURUM')
+                        ->on('main.ay', '=', 'company.ay')
+                        ->on('main.il', '=', 'company.il');
+                })
+                ->leftJoin('e_lstarifs as tarif', function ($join) {
+                    $join->on('other.KODTARIF', '=', 'tarif.KODTARIF')
+                        ->on('other.ay', '=', 'tarif.ay')
+                        ->on('other.il', '=', 'tarif.il');
+                })
+                ->select(
+                    'main.notel',
+                    'main.KODQURUM',
+                    'main.ABONENT',
+                    'other.KODTARIF',
+                    'other.SUMMA',
+                    'company.KATEQOR',
+                    'tarif.ADTARIF',
+                    'tarif.KODISH'
+                );
+
+            $otherDatas = DB::table(DB::raw("({$otherData->toSql()}) as E1"));
+            // return $E1->take(10)->get();
+
+            $mainData = DB::table('e_flkarts  as main')
+                ->leftJoin('e_lsqurums as company',
+                    function ($join) {
+                        $join->on('main.KODQURUM', '=', 'company.KODQURUM')
+                            ->on('main.ay', '=', 'company.ay')
+                            ->on('main.il', '=', 'company.il');
+                    })
+                ->leftJoin('e_lstarifs as tarif',
+                    function ($join) {
+                        $join->on('main.kodtarif', '=', 'tarif.kodtarif')
+                            ->on('main.ay', '=', 'tarif.ay')
+                            ->on('main.ay', '=', 'tarif.ay');
+                    }
+                )
+                ->select(
+                    'notel',
+                    'main.KODQURUM',
+                    'ABONENT',
+                    'main.KODTARIF',
+                    'main.SUMMA0 as SUMMA',
+                    'KATEQOR',
+                    'ADTARIF',
+                    'KODISH'
+                )
+                ->unionAll($otherDatas);
+            $dataJoin = DB::table(DB::raw("({$mainData->toSql()}) as T1"));
+            //return    $dataJoin->take(10)->get();
+
+
+            $dataCategory = $dataJoin
+                ->select('T1.*',
+                    $dataJoin->raw(
+                        '
+                        CASE
+    		WHEN T1.abonent IN (1, 8) THEN "MENZIL"
+    		ELSE "IDERE"
+    		END AS "categoriya"
+                '
+                    )
+                );
+            $dataCategories = DB::table(DB::raw("({$dataCategory->toSql()}) as T2"));
+
+            // return$dataCategories->where('abonent',1)->take(10)->get();
+
+            $dataService = $dataCategories->select('T2.KODTARIF', 'T2.ADTARIF',
+                DB::raw('COALESCE( T2.KODTARIF)'),
+                $dataCategories->raw(
+                    '
+
+    SUM( CASE WHEN T2.categoriya = "MENZIL" THEN 1 ELSE 0 END ) as menzil_say,
+    SUM( CASE WHEN T2.categoriya = "MENZIL" THEN T2.summa ELSE 0 END) as menzil_summa,
+
+    SUM( CASE WHEN T2.categoriya = "IDERE" THEN 1 ELSE 0 END ) as idere_say,
+    SUM( CASE WHEN T2.categoriya = "IDERE" AND T2.kateqor IN (21,31,71,23,33,73) THEN T2.summa ELSE 0 END) as idere_edv,
+    SUM( CASE WHEN T2.categoriya = "IDERE" THEN T2.summa ELSE 0 END) as idere_summa,
+
+    COUNT(*) as cemi_say,
+    SUM(T2.summa) as cemi_hesab
+                '
+                ));
+
+            $resultsData = $dataService
+                ->whereIn('abonent', [1, 2])
+                ->whereNotIn('KODISH', [0, 5, 6, 8])
+                ->groupBy([DB::raw('KODTARIF WITH ROLLUP')])
+                ->get()
+                ->map(function ($item) {
+                    // Rollup nəticəsində "KODTARIF" boş gələndə cəmi yazmaq üçün
+                    if ($item->KODTARIF === null) {
+                        $item->KODTARIF = 'CƏMİ';
+                        $item->ADTARIF = '';
+                    }
+                    return $item;
+                });
+
+            return view('Finance.gelir', compact('months', 'years', 'resultsData'));
+
+        } else {
+            return view('Finance.gelir', compact('months', 'years'));
         }
     }
 
