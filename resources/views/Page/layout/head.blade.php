@@ -29,7 +29,7 @@
     <link href="{{asset('NiceAdmin/')}}/assets/css/style.css" rel="stylesheet">
 
 
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @yield('css_select')
     @yield('data_table_ccs')
@@ -40,3 +40,5 @@
 </head>
 
 <body>
+    
+

@@ -16,15 +16,22 @@
 
         <li class="nav-item">
             <a class="nav-link {{ request()->is('telnet') ? '' : 'collapsed' }}" href="{{route('telnet')}}">
-                <i class="bi   bi-person-vcard-fill"></i>
+                <i class="bi bi-person-vcard-fill"></i>
                 <span>Telnet İstifadəçilər</span>
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link {{ request()->is('tarif') ? '' : 'collapsed' }}" href="{{route('tarif')}}">
-                <i class="bi   bi-slack"></i>
+                <i class="bi bi-slack"></i>
                 <span>Tariflər</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('todo') ? '' : 'collapsed' }}" href="{{route('todo.index')}}">
+                <i class="bi bi-list"></i>
+                <span>Todo List</span>
             </a>
         </li>
 

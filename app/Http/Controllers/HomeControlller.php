@@ -16,6 +16,11 @@ class HomeControlller extends Controller
         return  view('page.dashboard');
     }
 
+    public function todo()
+    {
+      return view('page.todo');
+    }
+
     public function telnet()
     {
 

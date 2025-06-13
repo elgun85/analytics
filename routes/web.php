@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeControlller;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\AnalyseController;
+use App\Livewire\Todo\TodoIndex;
+
 
 //Route::view('/', 'welcome');
 
@@ -13,18 +15,19 @@ Route::get('/Register',[LoginController::class,'register'])->name('registers');
 Route::post('/logout',[LoginController::class,'logout'])->name('logout');
 Route::get('/Profile',[LoginController::class,'profile'])->name('profiles');
 
-
-
-
-
-
-
                         /*Admin*/
 Route::group(['middleware' => ['auth','isAdmin']],function ()
 {
+
+                              /* Todo lis */
+   //Route::get('/todo',TodoIndex::class)->name('todo.index');
+
+
+
     Route::get('/dashboard', [HomeControlller::class, 'dashboard'])->name('dashboard');
     Route::get('/telnet', [HomeControlller::class, 'telnet'])->name('telnet');
     Route::get('/tarif', [HomeControlller::class, 'tarif'])->name('tarif');
+    Route::get('/todoo', [HomeControlller::class, 'todo'])->name('todo.index');
     Route::get('/dataTable', [HomeControlller::class, 'dataTable'])->name('dataTable');
     Route::get('/dataTable2', [HomeControlller::class, 'dataTable2'])->name('dataTable2');
 
@@ -48,6 +51,8 @@ Route::group(['middleware' => ['auth','isAdmin']],function ()
     Route::get('/edv_siz_senedlesme', [FinanceController::class, 'edvs'])->name('edvs');
     Route::get('/edv_siz_siyahi', [FinanceController::class, 'edv'])->name('edv');
     Route::get('/gelir', [FinanceController::class, 'gelir'])->name('gelir');
+
+
 
 
 

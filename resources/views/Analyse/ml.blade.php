@@ -73,7 +73,7 @@
                                                 <td>{{$mhmVal->mhm_hesablama }}</td>
                                                 <td>{{$lksArray[$mhmVal->notel]->lks_hesablama}}</td>
                                                 <td>
-                                                    {{number_format($lksArray[$mhmVal->notel]->lks_hesablama - $mhmVal->mhm_hesablama, 2, ',', ' ')}}
+                                                    {{number_format($lksArray[$mhmVal->notel]->lks_hesablama - $mhmVal->mhm_hesablama, 2, ', ', ' ')}}
                                                 </td>
                                             </tr>
                                         @elseif(($lksArray[$mhmVal->notel]->lks_hesablama -$mhmVal->mhm_hesablama) < -0.1)
@@ -82,7 +82,7 @@
                                                 <td>{{$mhmVal->mhm_hesablama }}</td>
                                                 <td>{{$lksArray[$mhmVal->notel]->lks_hesablama}}</td>
                                                 <td>
-                                                    {{number_format($lksArray[$mhmVal->notel]->lks_hesablama - $mhmVal->mhm_hesablama, 2, ',', ' ')}}
+                                                    {{number_format($lksArray[$mhmVal->notel]->lks_hesablama - $mhmVal->mhm_hesablama, 2, ', ', ' ')}}
                                                 </td>
                                             </tr>
                                         @endif
@@ -91,7 +91,7 @@
                                             <td>{{$mhmVal->notel}}</td>
                                             <td>{{$mhmVal->mhm_hesablama}}</td>
                                             <td>0.00</td>
-                                            <td>{{number_format(0 - $mhmVal->mhm_hesablama, 2, ',', ' ')}}</td>
+                                            <td>{{number_format(0 - $mhmVal->mhm_hesablama, 2, ', ', ' ')}}</td>
                                         </tr>
                                     @endif
                                     {{--</tr>--}}
@@ -123,7 +123,7 @@
                                             <td>{{$lksVal->notel}}</td>
                                             <td>{{$lksVal->lks_hesablama}}</td>
                                             <td>0.00</td>
-                                            <td> {{number_format(0 - $lksVal->lks_hesablama, 2, ',', ' ')}}</td>
+                                            <td> {{number_format(0 - $lksVal->lks_hesablama, 2, ', ', ' ')}}</td>
                                         </tr>
                                     @endif
                                 @endforeach

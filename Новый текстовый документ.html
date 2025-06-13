@@ -10,12 +10,68 @@
     git push -u origin main
 
 
+    git remote add origin https://github.com/elgun85/InteractiveQuiz.git
+    git branch -M main
+    git push -u origin main
+
+
 
 
     git pull origin main
     git add .
     git commit -m "     "
     git push origin main
+
+
+
+
+    Əgər son commit mesajını dəyişmək istəyirsinizsə, --amend seçimi ilə git commit əmrini istifadə edə bilərsiniz:
+    git commit --amend -m "Yeni commit mesajı"
+    git push --force
+
+
+
+    ./vendor/bin/phpstan analyse --level=max
+
+</div>
+<div class="middleware Laravel-permission">
+    1. composer require spatie/laravel-permission
+2.php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+    3. php artisan migrate
+4.Mes Model-de HasRoles (use Spatie\Permission\Traits\HasRoles;)
+    5. UserFactory-da
+    public function configure():static
+    {
+    return $this->afterCreating(function (User $user){
+    $user->assignRole('user');//syncRoles('user');  // assignRole yerinə syncRoles istifadə olunur ki, yalnız bir rol təyin edilsin
+    });
+    }
+    6. php artisan make:seeder RoleSeeder
+    public function run(): void
+    {
+    Role::create(['name' => 'admin']);
+    Role::create(['name' => 'user']);
+    }
+    7. DatabaseSeeder-da
+    $this->call(RoleSeeder::class);
+
+
+
+    //   User::factory(3)->create();
+
+    User::factory()->create([
+    'name' => 'Admin',
+    'email' => 'admin@admin.com',
+    'password' => bcrypt('12345678'),
+    ])->assignRole('admin');  //syncRoles('user');  // assignRole yerinə syncRoles istifadə olunur ki, yalnız bir rol təyin edilsin
+
+    User::factory()->create([
+    'name' => 'User',
+    'email' => 'user@user.com',
+    'password' => bcrypt('12345678'),
+    ])->assignRole('user');
+    8.registerde event(new Registered($user = User::create($validated)))->assignRole('user');
+    9.php artisan migrate:fresh --seed
 
 
 </div>

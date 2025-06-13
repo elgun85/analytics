@@ -203,8 +203,8 @@ class FinanceController extends Controller
 
 	            CASE
  	         	   	WHEN Ts1.kodxidmet IN (101,102,103,104,105,107)                                         THEN "1. Telefon çəkilişi"
- 	         	   	WHEN Ts1.kodxidmet IN (382,581,582,584,602,378)                                                 THEN "3. Avadanlıq satışı(GPON,LTE və s.)"
- 	         	   	WHEN Ts1.kodxidmet IN (5,121,123,131,135,136,151,171,262,299,342,345,521,533,542,545
+ 	         	   	WHEN Ts1.kodxidmet IN (382,581,582,584,588,585,602,378)                                 THEN "3. Avadanlıq satışı(GPON,LTE və s.)"
+ 	         	   	WHEN Ts1.kodxidmet IN (5,121,123,131,135,136,151,171,262,299,342,347,345,521,533,542,545
  	         	   	)                                             THEN "2. Bərpa,A-Ada,nömrə dəy. və s."
  	         	   	WHEN Ts1.kodxidmet IN (109,372,373,374)                                         THEN "4. Smeta,Kabelləşmə və s."
 
@@ -439,8 +439,8 @@ class FinanceController extends Controller
 
 	            CASE
  	         	   	WHEN Ts1.kodxidmet IN (101,102,103,104,105,107)                                         THEN "1. Telefon çəkilişi"
- 	         	   	WHEN Ts1.kodxidmet IN (382,581,582,584,602,378)                                                 THEN "3. Avadanlıq satışı(GPON,LTE və s.)"
- 	         	   	WHEN Ts1.kodxidmet IN (5,121,123,131,135,136,151,171,262,299,342,345,521,533,542,545
+ 	         	   	WHEN Ts1.kodxidmet IN (382,581,582,584,588,585,602,378)                                                 THEN "3. Avadanlıq satışı(GPON,LTE və s.)"
+ 	         	   	WHEN Ts1.kodxidmet IN (5,121,123,131,135,136,151,171,262,299,342,345,347,521,533,542,545
  	         	   	)                                             THEN "2. Bərpa,A-Ada,nömrə dəy. və s."
  	         	   	WHEN Ts1.kodxidmet IN (109,372,373,374)                                         THEN "4. Smeta,Kabelləşmə və s."
 
@@ -675,8 +675,8 @@ class FinanceController extends Controller
 
 	            CASE
  	         	   	WHEN Ts1.kodxidmet IN (101,102,103,104,105,107)                                         THEN "1. Telefon çəkilişi"
- 	         	   	WHEN Ts1.kodxidmet IN (382,581,582,584,602,378)                                                 THEN "3. Avadanlıq satışı(GPON,LTE və s.)"
- 	         	   	WHEN Ts1.kodxidmet IN (5,121,123,131,135,136,151,171,262,299,342,345,521,533,542,545
+ 	         	   	WHEN Ts1.kodxidmet IN (382,581,582,584,588,585,602,378)                                                 THEN "3. Avadanlıq satışı(GPON,LTE və s.)"
+ 	         	   	WHEN Ts1.kodxidmet IN (5,121,123,131,135,136,151,171,262,299,342,345,347,521,533,542,545
  	         	   	)                                             THEN "2. Bərpa,A-Ada,nömrə dəy. və s."
  	         	   	WHEN Ts1.kodxidmet IN (109,372,373,374)                                         THEN "4. Smeta,Kabelləşmə və s."
             		ELSE "Digər"
